@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Организации{% endblock %}
+
+{% block content %}
+<div class="row justify-content-between align-items-center mb-3">
+    <h2>Организации</h2>
+    <a href="{{ url_for('main.add_organization') }}" class="btn btn-primary">Добавить организацию</a>
+</div>
+
+<form method="post" class="mb-3">
+    {{ filter_form.hidden_tag() }}
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            {{ filter_form.search_query.label(class="visually-hidden") }}
+            {{ filter_form.search_query(class="form-control") }}
+        </div>
+        <div class="col-auto">
+            {{ filter_form.salesman_filter.label(class="form-check-label") }}
+            {{ filter_form.salesman_filter(class="form-check-input") }}
+        </div>
+        <div class="col-auto">
+            {{ filter_form.buyer_filter.label(class="form-check-label") }}
+            {{ filter_form.buyer_filter(class="form-check-input") }}
+        </div>
+        <div class="col-auto">
+            {{ filter_form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>ИНН</th>
+            <th>Адрес</th>
+            <th>Телефон</th>
+            <th>Продавец?</th>
+            <th>Покупатель?</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for org in organizations %}
+            <tr>
+                <td>{{ org.name }}</td>
+                <td>{{ org.inn }}</td>
+                <td>{{ org.address }}</td>
+                <td>{{ org.phone }}</td>
+                <td>{{ 'Да' if org.salesman else 'Нет' }}</td>
+                <td>{{ 'Да' if org.buyer else 'Нет' }}</td>
+                <td>
+                    <a href="{{ url_for('main.edit_organization', id=org.id) }}" class="btn btn-info btn-sm">Редактировать</a>
+
+                    <!-- Кнопка удаления -->
+                    <button type="button" class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ org.id }}">
+                        Удалить
+                    </button>
+
+                    <!-- Модальное окно подтверждения -->
+                    <div class="modal fade" id="deleteModal{{ org.id }}" tabindex="-1"
+                         aria-labelledby="deleteModalLabel{{ org.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ org.id }}">Подтверждение удаления</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Вы действительно хотите удалить организацию <strong>"{{ org.name }}"</strong>?
+                                    <br><br>
+                                    <em>Внимание: это действие нельзя отменить.</em>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                    <a href="{{ url_for('main.delete_organization', id=org.id) }}" class="btn btn-danger">Удалить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

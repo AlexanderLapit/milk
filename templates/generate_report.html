@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Генерация отчета</h3>
+<form method="post">
+    <div class="mb-3">
+        <label>Тип отчета</label>
+        <select name="report_type" class="form-control" required>
+            <option value="sales">Продажи</option>
+            <option value="performance">Производительность</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Начало периода</label>
+        <input type="datetime-local" name="start" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label>Конец периода</label>
+        <input type="datetime-local" name="end" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-success">Сгенерировать</button>
+</form>
+{% endblock %}

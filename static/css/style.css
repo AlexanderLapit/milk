@@ -1,0 +1,130 @@
+/* Общие стили */
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Обёртка для полного заполнения высоты */
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Основное содержимое занимает оставшееся пространство и не прячется под navbar */
+.main {
+    flex: 1;
+    padding-top: 70px;    /* Ключевое исправление */
+    padding-bottom: 20px; /* Отступ от футера */
+}
+
+/* Фиксированная шапка */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.navbar-nav .nav-link {
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #198754 !important;
+}
+
+/* Кастомизация кнопок */
+.btn-primary {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.btn-primary:hover {
+    background-color: #157347;
+    border-color: #157347;
+}
+
+.btn-outline-success {
+    color: #198754;
+    border-color: #198754;
+}
+
+.btn-outline-success:hover {
+    background-color: #198754;
+    color: white;
+}
+
+/* Таблицы */
+.table th {
+    background-color: #e9ecef;
+    font-weight: 600;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+/* Карточки */
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Формы */
+.form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.was-validated .form-control:invalid,
+.was-validated .form-select:invalid {
+    border-color: #dc3545;
+}
+
+/* Алерты */
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+/* Футер — прижат к низу */
+.footer {
+    margin-top: auto;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 1rem 0;
+}
+
+/* Иконки */
+.fa {
+    margin-right: 6px;
+}
+
+/* Адаптивность */
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    .main {
+        padding-top: 60px; /* Меньше на мобильных */
+    }
+}

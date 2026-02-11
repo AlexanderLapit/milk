@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Добавление продукта{% endblock %}
+
+{% block content %}
+<h2>Добавить новый продукт</h2>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        <label for="name" class="form-label">Название продукта</label>
+        {{ form.name(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        <label for="weight" class="form-label">Вес</label>
+        {{ form.weight(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Количество</label>
+        {{ form.quantity(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        <label for="cost" class="form-label">Стоимость</label>
+        {{ form.cost(class="form-control") }}
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить продукт</button>
+</form>
+{% endblock %}

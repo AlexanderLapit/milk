@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Просмотр отчёта №{{ report.id }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h3>📋 Просмотр отчёта</h3>
+
+        <dl class="row">
+            <dt class="col-sm-3">ID отчёта:</dt>
+            <dd class="col-sm-9">{{ report.id }}</dd>
+
+            <dt class="col-sm-3">Тип:</dt>
+            <dd class="col-sm-9">{{ report.report_type }}</dd>
+
+            <dt class="col-sm-3">Период:</dt>
+            <dd class="col-sm-9">
+                {% if report.period_start %}
+                    {{ report.period_start.strftime('%d.%m.%Y') }}
+                {% else %}—{% endif %}
+                —
+                {% if report.period_end %}
+                    {{ report.period_end.strftime('%d.%m.%Y') }}
+                {% else %}—{% endif %}
+            </dd>
+
+            <dt class="col-sm-3">Дата создания:</dt>
+            <dd class="col-sm-9">{{ report.created_at.strftime('%d.%m.%Y %H:%M') }}</dd>
+        </dl>
+
+        <h5>Данные отчёта:</h5>
+        <pre class="bg-light p-3 rounded border">
+{
+  "total_orders": {{ report.data.total_orders }},
+  "total_revenue": {{ "%.2f"|format(report.data.total_revenue) }} руб.,
+  "period_start": "{{ report.data.period_start }}",
+  "period_end": "{{ report.data.period_end }}"
+}
+        </pre>
+
+        <div class="mt-3">
+            <a href="{{ url_for('main.export_report', id=report.id) }}" class="btn btn-success">📥 Экспортировать JSON</a>
+            <a href="{{ url_for('main.reports_list') }}" class="btn btn-secondary">Назад к списку</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

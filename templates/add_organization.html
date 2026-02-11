@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить организацию{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <h2 class="text-center mb-4">Добавить организацию</h2>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.inn.label(class="form-label") }}
+                {{ form.inn(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.address.label(class="form-label") }}
+                {{ form.address(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.phone.label(class="form-label") }}
+                {{ form.phone(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.salesman.label(class="form-check-label") }}
+                {{ form.salesman(class="form-check-input") }}
+            </div>
+            <div class="mb-3">
+                {{ form.buyer.label(class="form-check-label") }}
+                {{ form.buyer(class="form-check-input") }}
+            </div>
+            <div class="d-grid gap-2">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

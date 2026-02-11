@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Отчёты{% endblock %}
+
+{% block content %}
+<h2>📊 Отчёты</h2>
+
+<a href="{{ url_for('main.generate_report') }}" class="btn btn-primary mb-3">Сгенерировать отчёт</a>
+
+{% if reports %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Тип отчёта</th>
+            <th>Период</th>
+            <th>Дата создания</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for report in reports %}
+        <tr>
+            <td>{{ report.report_type }}</td>
+            <td>
+                {% if report.period_start %}
+                    {{ report.period_start.strftime('%d.%m.%Y') }}
+                {% else %}
+                    —
+                {% endif %}
+                —
+                {% if report.period_end %}
+                    {{ report.period_end.strftime('%d.%m.%Y') }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>{{ report.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+            <td>
+                <a href="{{ url_for('main.view_report', id=report.id) }}" class="btn btn-sm btn-info">Просмотр</a>
+                <a href="{{ url_for('main.export_report', id=report.id) }}" class="btn btn-sm btn-warning">Экспорт</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Нет сгенерированных отчётов.</p>
+{% endif %}
+{% endblock %}

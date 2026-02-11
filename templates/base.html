@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Система управления предприятием{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">ООО Молочный комбинат "Полесье"</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Переключить навигацию">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                            {% if current_user.is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dashboard') }}">Главная</a></li>
+                                {% if current_user.role == 'admin' %}
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.users_list') }}">Пользователи</a></li>
+                                {% endif %}
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.materials_list') }}">Материалы</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.organizations_list') }}">Организации</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.orders_list') }}">Заказы</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.products_list') }}">Товары</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.reports_list') }}">Отчеты</a></li>
+                                {% if current_user.role == 'admin' %}
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.settings') }}">Настройки</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.import_organizations') }}">Импорт заказчиков</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.export_organizations') }}">Экспорт заказчиков</a></li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                        <ul class="navbar-nav ms-auto">
+                            {% if current_user.is_authenticated %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                       data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ current_user.username }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="{{ url_for('main.dashboard') }}">Панель управления</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('main.logout') }}">Выход</a></li>
+                                    </ul>
+                                </li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.login') }}">Вход</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main container mt-5 pt-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <small>© {{ current_year if current_year else '' }} Учебный проект. Все права защищены</small>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const yearSpan = document.querySelector('footer small');
+            if (yearSpan.textContent.includes('{{ current_year }}')) {
+                yearSpan.textContent = yearSpan.textContent.replace('{{ current_year }}', new Date().getFullYear());
+            }
+        });
+    </script>
+</body>
+</html>

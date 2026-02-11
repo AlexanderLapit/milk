@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать заказ{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <h2 class="text-center mb-4">Редактировать заказ</h2>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.order_number.label(class="form-label") }}
+                {{ form.order_number(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.organization_id.label(class="form-label") }}
+                {{ form.organization_id(class="form-select") }}
+            </div>
+            <div class="mb-3">
+                {{ form.total_price.label(class="form-label") }}
+                {{ form.total_price(class="form-control") }}
+            </div>
+            <div class="d-grid gap-2">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

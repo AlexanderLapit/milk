@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Настройки{% endblock %}
+
+{% block content %}
+<h3>Настройки приложения</h3>
+
+<div class="card mb-4">
+    <div class="card-header">Информация о системе</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Версия:</strong> {{ version }}</li>
+        <li class="list-group-item"><strong>Режим:</strong> {{ 'Разработка' if debug else 'Продуктивный' }}</li>
+        <li class="list-group-item"><strong>База данных:</strong> {{ db_uri.split('://')[0].upper() }}</li>
+        <li class="list-group-item"><strong>Пользователь:</strong> {{ current_user.username }} ({{ current_user.role }})</li>
+    </ul>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Смена пароля</div>
+    <div class="card-body">
+        <form method="post">
+            <input type="hidden" name="action" value="change_password">
+            <div class="mb-3">
+                <label for="old_password" class="form-label">Текущий пароль</label>
+                <input type="password" class="form-control" id="old_password" name="old_password" required>
+            </div>
+            <div class="mb-3">
+                <label for="new_password" class="form-label">Новый пароль</label>
+                <input type="password" class="form-control" id="new_password" name="new_password" minlength="6" required>
+            </div>
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Подтвердите пароль</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="btn btn-warning">Изменить пароль</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Резервное копирование</div>
+    <div class="card-body">
+        <p>Создайте резервную копию базы данных.</p>
+        <form method="post">
+            <input type="hidden" name="action" value="backup_db">
+            <button type="submit" class="btn btn-secondary">Создать бэкап</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Очистка временных файлов</div>
+    <div class="card-body">
+        <p>Удалите временные файлы (экспортированные JSON и т.п.).</p>
+        <form method="post">
+            <input type="hidden" name="action" value="cleanup_temp">
+            <button type="submit" class="btn btn-danger">Очистить temp/</button>
+        </form>
+    </div>
+</div>
+
+<div class="alert alert-info">
+    <small>Это учебное приложение. В продакшене такие действия должны быть защищены дополнительными проверками (2FA, логи, ограничения).</small>
+</div>
+{% endblock %}

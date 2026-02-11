@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Материалы{% endblock %}
+
+{% block content %}
+<div class="row justify-content-between align-items-center mb-3">
+    <h2>Материалы</h2>
+    <a href="{{ url_for('main.add_material') }}" class="btn btn-primary">Добавить материал</a>
+</div>
+
+<form method="post" class="mb-3">
+    {{ filter_form.hidden_tag() }}
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            {{ filter_form.search_query.label(class="visually-hidden") }}
+            {{ filter_form.search_query(class="form-control") }}
+        </div>
+        <div class="col-auto">
+            {{ filter_form.min_quantity.label(class="visually-hidden") }}
+            {{ filter_form.min_quantity(class="form-control") }}
+        </div>
+        <div class="col-auto">
+            {{ filter_form.max_quantity.label(class="visually-hidden") }}
+            {{ filter_form.max_quantity(class="form-control") }}
+        </div>
+        <div class="col-auto">
+            {{ filter_form.submit(class="btn btn-primary") }}
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Количество</th>
+            <th>Единица измерения</th>
+            <th>Цена за единицу</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for material in materials %}
+            <tr>
+                <td>{{ material.name }}</td>
+                <td>{{ material.description }}</td>
+                <td>{{ material.quantity }}</td>
+                <td>{{ material.unit }}</td>
+                <td>{{ material.price_per_unit }}</td>
+                <td>
+                    <a href="{{ url_for('main.edit_material', id=material.id) }}" class="btn btn-info btn-sm">Редактировать</a>
+
+                    <!-- Кнопка удаления -->
+                    <button type="button" class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ material.id }}">
+                        Удалить
+                    </button>
+
+                    <!-- Модальное окно подтверждения удаления -->
+                    <div class="modal fade" id="deleteModal{{ material.id }}" tabindex="-1"
+                         aria-labelledby="deleteModalLabel{{ material.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ material.id }}">Подтверждение удаления</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Вы действительно хотите удалить материал <strong>"{{ material.name }}"</strong>?
+                                    <br><br>
+                                    <em>Внимание: это действие нельзя отменить.</em>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                    <a href="{{ url_for('main.delete_material', id=material.id) }}" class="btn btn-danger">Удалить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,34 @@
+<!-- templates/edit_product.html -->
+{% extends "base.html" %}
+
+{% block title %}Редактировать продукт{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <h2 class="text-center mb-4">Редактировать продукт</h2>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.weight.label(class="form-label") }}
+                {{ form.weight(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.quantity.label(class="form-label") }}
+                {{ form.quantity(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.cost.label(class="form-label") }}
+                {{ form.cost(class="form-control") }}
+            </div>
+            <div class="d-grid gap-2">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

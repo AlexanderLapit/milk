@@ -1,0 +1,26 @@
+[
+    {
+        "name": "ООО \"Ромашка\"",
+        "inn": "4140784214",
+        "address": "",
+        "phone": "+79882584546",
+        "salesman": false,
+        "buyer": true
+    },
+    {
+        "name": "ООО \"Ипподром\"",
+        "inn": "5874045632",
+        "address": "",
+        "phone": "+79627486389",
+        "salesman": true,
+        "buyer": true
+    },
+    {
+        "name": "ООО \"Ассоль\"",
+        "inn": "2629011278",
+        "address": "",
+        "phone": "+79184572398",
+        "salesman": false,
+        "buyer": true
+    }
+]
