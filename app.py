@@ -7,7 +7,7 @@ login_manager = LoginManager()
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.DevelopmentConfig')
-
+    app.jinja_env.globals.update(enumerate=enumerate)
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
@@ -78,6 +78,7 @@ def create_admin_user():
         print("✅ Администратор 'admin' успешно создан.")
     else:
         print("ℹ️  Пользователь 'admin' уже существует.")
+
 
 
 if __name__ == '__main__':

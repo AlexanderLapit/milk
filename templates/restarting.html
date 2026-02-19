@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Перезапуск приложения</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .message {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <h2>База данных успешно восстановлена</h2>
+        <p>Приложение будет перезапущено через 2 секунды...</p>
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            // Отправляем запрос на перезапуск
+            fetch('/restart', { method: 'POST' })
+                .then(() => {
+                    // После получения ответа перенаправляем на страницу настроек
+                    window.location.href = "{{ url_for('main.settings') }}";
+                })
+                .catch(() => {
+                    // Если ошибка, всё равно пытаемся перейти на страницу настроек
+                    window.location.href = "{{ url_for('main.settings') }}";
+                });
+        }, 2000);
+    </script>
+</body>
+</html>

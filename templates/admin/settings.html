@@ -40,13 +40,36 @@
 <div class="card mb-4">
     <div class="card-header">Резервное копирование</div>
     <div class="card-body">
-        <p>Создайте резервную копию базы данных.</p>
-        <form method="post">
-            <input type="hidden" name="action" value="backup_db">
-            <button type="submit" class="btn btn-secondary">Создать бэкап</button>
+        <form method="post" action="{{ url_for('main.backup_full') }}">
+            <button type="submit" class="btn btn-secondary mb-2">Полный бэкап</button>
+        </form>
+        <form method="post" action="{{ url_for('main.backup_differential') }}">
+            <button type="submit" class="btn btn-warning mb-2">Дифференциальный бэкап</button>
+        </form>
+        <form method="post" action="{{ url_for('main.backup_incremental') }}">
+            <button type="submit" class="btn btn-info mb-2">Инкрементальный бэкап</button>
         </form>
     </div>
 </div>
+
+
+<div class="card">
+    <div class="card-header">История резервных копий</div>
+    <ul class="list-group list-group-flush">
+        {% for i, entry in enumerate(backup_log) %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ entry.type | title }}</strong>: {{ entry.filename }}
+                <small>{{ entry.timestamp }}</small>
+            </div>
+            <form method="post" action="{{ url_for('main.restore_from_backup', backup_id=i) }}">
+                <button type="submit" class="btn btn-sm btn-danger">Восстановить</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
 
 <div class="card mb-4">
     <div class="card-header">Очистка временных файлов</div>

@@ -1,5 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
+import signal
+import sys
+import time
+
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file, current_app, session
 from flask_login import login_required, login_user, logout_user, current_user
+
+from backup_system import full_backup, get_last_full_backup_time, get_last_backup_time, incremental_backup, \
+    differential_backup, read_backup_log, restore_backup
 from models import User, Material, Organization, Order, Report, Product
 from forms import (
     LoginForm, AddMaterialForm, EditMaterialForm, AddOrganizationForm,
@@ -496,7 +503,7 @@ def settings():
         flash("Доступ запрещён.", "danger")
         return redirect(url_for('main.dashboard'))
 
-    from utils import backup_database, cleanup_temp_files
+    from utils import cleanup_temp_files
     import config
 
     if request.method == 'POST':
@@ -518,16 +525,13 @@ def settings():
                 db.session.commit()
                 flash("Пароль успешно изменён.", "success")
 
-        elif action == 'backup_db':
-            success, message = backup_database()
-            flash(message, "success" if success else "danger")
-
         elif action == 'cleanup_temp':
             count = cleanup_temp_files()
             flash(f"Удалено {count} временных файлов.", "info")
 
     return render_template(
         'admin/settings.html',
+        backup_log = read_backup_log(),
         debug=config.DevelopmentConfig.DEBUG,
         db_uri=config.Config.SQLALCHEMY_DATABASE_URI,
         version="1.0.0"
@@ -616,3 +620,55 @@ def export_report(id):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     return send_file(file_path, as_attachment=True, download_name=f"Отчёт_{report.id}.json")
+
+@main_bp.route('/backup/full', methods=['POST'])
+@login_required
+def backup_full():
+    success, msg = full_backup()
+    flash(msg, 'success' if success else 'danger')
+    return redirect(url_for('main.settings'))
+
+
+@main_bp.route('/backup/incremental', methods=['POST'])
+@login_required
+def backup_incremental():
+    last_time = get_last_backup_time()
+    success, msg = incremental_backup(last_backup_time=last_time)
+    flash(msg, 'success' if success else 'danger')
+    return redirect(url_for('main.settings'))
+
+@main_bp.route('/backup/differential', methods=['POST'])
+@login_required
+def backup_differential():
+    last_time = get_last_full_backup_time()
+    success, msg = differential_backup(last_full_backup_time=last_time)
+    flash(msg, 'success' if success else 'danger')
+    return redirect(url_for('main.settings'))
+
+
+@main_bp.route('/restore/<int:backup_id>', methods=['POST'])
+@login_required
+def restore_from_backup(backup_id):
+    log_entries = read_backup_log()
+    if backup_id >= len(log_entries):
+        flash("Неверный ID резервной копии.", "danger")
+        return redirect(url_for('main.settings'))
+
+    entry = log_entries[backup_id]
+    success, msg = restore_backup(entry['path'])
+
+    if success:
+        # Сохраняем сообщение в сессии для отображения после перезапуска
+        session['restore_success'] = msg
+        # Возвращаем специальную страницу с JavaScript для перезапуска
+        return render_template('restarting.html')
+    else:
+        flash(msg, 'danger')
+        return redirect(url_for('main.settings'))
+
+
+@main_bp.route('/restart', methods=['POST'])
+def restart_app():
+    time.sleep(1)
+    os.execl(sys.executable, sys.executable, *sys.argv)
+    return '', 200
